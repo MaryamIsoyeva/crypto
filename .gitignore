@@ -3,7 +3,8 @@ xcuserdata/
 
 *.xcscmblueprint
 *.xccheckout
-
+*.1
+*.xcodeproj
 build/
 DerivedData/
 *.moved-aside
