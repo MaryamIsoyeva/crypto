@@ -72,18 +72,85 @@ bool TestCasesAES::testKeyExpansion(){
 //    }
     return w;
 }
+bool TestCasesAES::testinvShiftRows(){
+    unsigned char input[16] = {0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff};
+    AES c(input, 4);
+    cout <<"\ninvshift\n";
+    for(int i = 0; i < 4; ++i){
+        for(int j = 0; j < 4; ++j){
+            c.state[i][j] = input[i+4*j];
+            cout << hex << (int)c.state[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    c.invShiftRows();
+    unsigned char correctinvshift[4][4] = {{0x00, 0x44, 0x88, 0xcc},
+        {0xdd, 0x11, 0x55, 0x99},
+        {0xaa, 0xee, 0x22, 0x66},
+        {0x77, 0xbb, 0xff, 0x33}
+    };
+    bool correct = true;
+    for(int i = 0; i < 4; ++i){
+        for(int j = 0; j < 4; ++j){
+            if(c.state[i][j] != correctinvshift[i][j]){
+                correct = false;
+                cout << "false";
+            }
+        }
+    }
+    cout <<"\ncheckinvshift\n";
+    for(int i = 0; i < 4; ++i){
+        for(int j = 0; j < 4; ++j){
+            cout << hex << (int)c.state[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    return correct;
+
+}
+bool TestCasesAES::testCipher(){
+    unsigned char input[16] = {0x32, 0x43, 0xf6, 0xa8, 0x88, 0x5a, 0x30, 0x8d, 0x31, 0x31, 0x98, 0xa2, 0xe0, 0x37, 0x07, 0x34};
+    AES c(input, 4);
+    c.cipher();
+    c.invCipher();
+/*    cout <<"decrypted";
+    for(int i = 0; i < 16; ++i){
+        cout << hex << (int)c.decrypted[i] << " ";
+    }*/
+    return (memcmp(input, c.decrypted, sizeof(input))==0);
+}
+bool TestCasesAES::testCipherText(){
+    unsigned char input[16] = {'a','b','c','d','e','f','g','e','a','b','c','d','e','f','g','e'};
+    AES c(input, 4);
+    c.cipher();
+    c.invCipher();
+    return (memcmp(input, c.decrypted, sizeof(input))==0);
+}
 bool TestCasesAES::allTests(){
     bool all = true;
     if(!testShiftRows()){
-        cout << "testShiftRows\n";
+        cout << "\ntestShiftRows\n";
         all = false;
     }
     if(!testMixColumns()){
-        cout << "testMixColumns\n";
+        cout << "\ntestMixColumns\n";
         all = false;
     }
     if(!testKeyExpansion()){
-        cout << "testKeyExpansion\n";
+        cout << "\ntestKeyExpansion\n";
+        all = false;
+    }
+//    cout << "\nTesing invShiftRows\n";
+    if(!testinvShiftRows()){
+        cout << "\ntestinvShiftRows\n";
+        all = false;
+    }
+    if(!testCipher()){
+        cout << "\ntestCipher\n";
+        all = false;
+    }
+    if(!testCipherText()){
+        cout << "\ntestCipherText\n";
         all = false;
     }
     return all;

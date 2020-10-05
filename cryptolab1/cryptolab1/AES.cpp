@@ -134,7 +134,7 @@ void AES::invShiftRows(){
     
     temp = state[2][3];
     state[2][3] = state[2][1];
-    state[2][1] = state[2][3];
+    state[2][1] = temp;
     temp = state[2][0];
     state[2][0] = state[2][2];
     state[2][2] = temp;
@@ -229,12 +229,14 @@ void AES::keyExpansion(){
     if(nk == 8){
         memcpy(keyScheduleAES, key256, nk*4);
     }*/
-    for(int i = 0; i < nb; ++i){
+    
+    /*for(int i = 0; i < nb; ++i){
         for(int j = 0; j < nk*4; ++j){
             cout << hex << (int)keyScheduleAES[i][j] <<" ";
         }
         cout << "\n";
     }
+    */
     unsigned char s;
     unsigned char tmp[4];
     unsigned char sboxr, sboxc, sboxe;
@@ -264,12 +266,12 @@ void AES::keyExpansion(){
             }
         }
     }
-    for(int i = 0; i < nb; ++i){
+    /*for(int i = 0; i < nb; ++i){
         for(int j = 0; j < (nb*(nr+1)); ++j){
             cout << hex << (int)keyScheduleAES[i][j] <<" ";
         }
         cout << "\n";
-    }
+    }*/
 }
 void AES::addRoundKey(int round){
     unsigned char s0, s1, s2, s3;
