@@ -7,9 +7,37 @@
 #include "TestCasesAES.h"
 #include "Kalyna.h"
 using namespace std;
-//void generateFile(){
-//    
-//}
+void generateFile(string filename){
+    int max_n = 100;
+    int min_n = 1;
+    unsigned char new_n;
+    int i;
+    fstream fs (filename.c_str(), std::fstream::in | std::fstream::out);
+    for (i = 0; i < 32000; i++) {
+        new_n = ((rand() % (max_n + 1 - min_n)) + min_n);
+        fs << hex << new_n;
+    }
+    fs.close();
+}
+void testAESOnGeneratedFile(string filename){
+    unsigned char buf[16];
+    unsigned char newn;
+    fstream fs (filename.c_str(), std::fstream::in | std::fstream::out);
+    fstream fsg ("/Users/elena/Downloads/GEneratedDecryptOutput.txt", std::fstream::in | std::fstream::out);
+    for (int i = 0; i < 2000; ++i){
+        for(int j = 0; j < 16; ++j){
+            fs >> hex >> newn;
+            buf[j] = newn;
+        }
+        AES d(buf, 4, 16);
+        d.invCipher();
+        for(int j = 0; j < 16; ++j){
+            fsg << hex << d.decrypted[j];
+        }
+    }
+    fs.close();
+    fsg.close();
+}
 void testAESOnFile(string filename){
 //    unsigned char buf[16];
 //    fstream f("/Users/elena/Downloads/2600-0.txt");
@@ -21,6 +49,7 @@ void testAESOnFile(string filename){
     unsigned char * in = (unsigned char *) malloc(size);
     chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
     while(fread(in, sizeof(unsigned char), size, file)){
+//        cout << in[0];
         AES c(in, 4);
         c.cipher();
         fwrite(c.output, sizeof(unsigned char), size, fileoutput);
@@ -40,7 +69,7 @@ void testAESDecipherOnFile(string filename){
     while(fread(in, sizeof(unsigned char), size, file)){
         AES c(in, 4, 16);
         c.invCipher();
-        fwrite(c.output, sizeof(unsigned char), size, fileoutput);
+        fwrite(c.decrypted, sizeof(unsigned char), size, fileoutput);
     }
     chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
     std::cout << "Deciphering time " << chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "ms" << "\n";
@@ -51,6 +80,7 @@ void testAESDecipherOnFile(string filename){
 }
 int main(int argc, const char * argv[])
 {
+    generateFile("/Users/elena/Downloads/generated");
     testAESOnFile("/Users/elena/Downloads/2600-0.txt");
     testAESDecipherOnFile("/Users/elena/Downloads/Output.txt");
 //    unsigned char c;
