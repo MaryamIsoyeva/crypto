@@ -86,7 +86,7 @@ int main(int argc, const char * argv[])
     begin = std::chrono::steady_clock::now();
     ctr1.cipher("/Users/elena/Downloads/10mb.txt");
     end = std::chrono::steady_clock::now();
-    cout << "Ciphering time for CFB " << chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "ms" << "\n";
+    cout << "Ciphering time for CTR " << chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "ms" << "\n";
     
     return 0;
 }
