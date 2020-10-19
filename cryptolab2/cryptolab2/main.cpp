@@ -5,6 +5,7 @@
 #include "CFB.h"
 #include "ECB.h"
 #include "CTR.h"
+#include "OFB.h"
 using namespace std;
 int main(int argc, const char * argv[])
 {
@@ -64,6 +65,12 @@ int main(int argc, const char * argv[])
 //    cfb1.decipher("/Users/elena/Downloads/10mb.txt");
 //    end = std::chrono::steady_clock::now();
 //    cout << "Deciphering time for CBC " << chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "ms" << "\n";
+    
+    OFB ofb1;
+    begin = std::chrono::steady_clock::now();
+    ofb1.cipher("/Users/elena/Downloads/10mb.txt");
+    end = std::chrono::steady_clock::now();
+    cout << "Ciphering time for OFB " << chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << "ms" << "\n";
     
     CTR ctr1;
     begin = std::chrono::steady_clock::now();
